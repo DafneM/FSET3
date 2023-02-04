@@ -11,14 +11,14 @@
 #include "mqtt.h"
 #include "dht11.h"
 
-SemaphoreHandle_t conexaoWifiSemaphore;
-SemaphoreHandle_t conexaoMQTTSemaphore;
+SemaphoreHandle_t connectionWifiSemaphore;
+SemaphoreHandle_t connectionMQTTSemaphore;
 
-void conectadoWifi(void * params)
+void wifi_connected(void * params)
 {
   while(true)
   {
-    if(xSemaphoreTake(conexaoWifiSemaphore, portMAX_DELAY))
+    if(xSemaphoreTake(connectionWifiSemaphore, portMAX_DELAY))
     {
       // Processamento Internet
       mqtt_start();
@@ -26,16 +26,21 @@ void conectadoWifi(void * params)
   }
 }
 
-void trataComunicacaoComServidor(void * params)
+void handle_server_communication(void * params)
 {
   char mensagem[50];
-  if(xSemaphoreTake(conexaoMQTTSemaphore, portMAX_DELAY))
+  // char jsonAtributos[200];
+  if(xSemaphoreTake(connectionMQTTSemaphore, portMAX_DELAY))
   {
     while(true)
     {
        float temperatura = 20.0 + (float)rand()/(float)(RAND_MAX/10.0);
        sprintf(mensagem, "temperatura1: %f", temperatura);
-       mqtt_envia_mensagem("sensores/temperatura", mensagem);
+       mqtt_envia_mensagem("v1/devices/me/telemetry", mensagem);
+
+      //  sprintf(jsonAtributos, "{\"quantidade de pinos\": 5, \n\"umidade\": 20}");
+      //  mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
+
        vTaskDelay(3000 / portTICK_PERIOD_MS);
     }
   }
@@ -56,12 +61,12 @@ void app_main(void)
     }
     ESP_ERROR_CHECK(ret);
     
-    conexaoWifiSemaphore = xSemaphoreCreateBinary();
-    conexaoMQTTSemaphore = xSemaphoreCreateBinary();
+    connectionWifiSemaphore = xSemaphoreCreateBinary();
+    connectionMQTTSemaphore = xSemaphoreCreateBinary();
     wifi_start();
 
-    xTaskCreate(&conectadoWifi,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
-    xTaskCreate(&trataComunicacaoComServidor, "Comunicação com Broker", 4096, NULL, 1, NULL);
+    xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
+    xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
 
     // DHT11_init(32);
 
