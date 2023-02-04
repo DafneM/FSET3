@@ -29,30 +29,40 @@ void wifi_connected(void * params)
 void handle_server_communication(void * params)
 {
   char mensagem[50];
-  // char jsonAtributos[200];
+  char jsonAtributos[200];
   if(xSemaphoreTake(connectionMQTTSemaphore, portMAX_DELAY))
   {
     while(true)
     {
-       float temperatura = 20.0 + (float)rand()/(float)(RAND_MAX/10.0);
-       sprintf(mensagem, "temperatura1: %f", temperatura);
-       mqtt_envia_mensagem("v1/devices/me/telemetry", mensagem);
+       float temp = 20.0 + (float)rand()/(float)(RAND_MAX/10.0);
+       
+      //  sprintf(mensagem, "{\"temperature\": %f}", temp);
+      //  mqtt_envia_mensagem("v1/devices/me/telemetry", mensagem);
 
-      //  sprintf(jsonAtributos, "{\"quantidade de pinos\": 5, \n\"umidade\": 20}");
-      //  mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
+       sprintf(jsonAtributos, "{\"quantidade de pinos\": 5, \n\"umidade\": 20}");
+       mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
 
        vTaskDelay(3000 / portTICK_PERIOD_MS);
     }
   }
 }
 
+void read_temperature_humidity_sensor(){
+    struct dht11_reading temp_sensor_read;
+    int temperature, humidity;
+
+    DHT11_init(32);
+
+    while(1){
+        temp_sensor_read = DHT11_read();
+        temperature = temp_sensor_read.temperature;
+        humidity = temp_sensor_read.humidity;
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    }
+}
+
 void app_main(void)
 {
-
-
-    // struct dht11_reading temp_sensor_read;
-    // int temperature, humidity;
-
     // Inicializa o NVS
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -68,15 +78,5 @@ void app_main(void)
     xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
     xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
 
-    // DHT11_init(32);
-
-    // while(1){
-    //     temp_sensor_read = DHT11_read();
-    //     temperature = temp_sensor_read.temperature;
-    //     humidity = temp_sensor_read.humidity;
-    //     printf("%d\n", temperature);
-    //     printf("%d\n", humidity);
-    //     vTaskDelay(1000 / portTICK_PERIOD_MS);
-    // }
 }
 
