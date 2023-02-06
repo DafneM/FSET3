@@ -10,6 +10,7 @@
 #include "wifi.h"
 #include "mqtt.h"
 #include "dht11.h"
+#include "json_treatment.h"
 
 SemaphoreHandle_t connectionWifiSemaphore;
 SemaphoreHandle_t connectionMQTTSemaphore;
@@ -57,6 +58,7 @@ void read_temperature_humidity_sensor(){
         temp_sensor_read = DHT11_read();
         temperature = temp_sensor_read.temperature;
         humidity = temp_sensor_read.humidity;
+        send_dht_telemetry(&temperature, &humidity);
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
@@ -76,7 +78,8 @@ void app_main(void)
     wifi_start();
 
     xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
-    xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
+    // xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
+    xTaskCreate(&read_temperature_humidity_sensor, "Comunicação com Broker", 4096, NULL, 1, NULL);
 
 }
 
