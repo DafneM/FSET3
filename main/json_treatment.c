@@ -8,6 +8,7 @@
 
 void send_dht_telemetry(void *temperature, void *humidity)
 {
+
     cJSON *root = cJSON_CreateObject();
     if (root == NULL)
     {

@@ -11,6 +11,7 @@
 #include "mqtt.h"
 #include "dht11.h"
 #include "json_treatment.h"
+#include "gpio.h"
 
 SemaphoreHandle_t connectionWifiSemaphore;
 SemaphoreHandle_t connectionMQTTSemaphore;
@@ -40,8 +41,8 @@ void handle_server_communication(void * params)
       //  sprintf(mensagem, "{\"temperature\": %f}", temp);
       //  mqtt_envia_mensagem("v1/devices/me/telemetry", mensagem);
 
-       sprintf(jsonAtributos, "{\"quantidade de pinos\": 5, \n\"umidade\": 20}");
-       mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
+      //  sprintf(jsonAtributos, "{\"quantidade de pinos\": 5, \n\"umidade\": 20}");
+      //  mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
 
        vTaskDelay(3000 / portTICK_PERIOD_MS);
     }
@@ -50,7 +51,7 @@ void handle_server_communication(void * params)
 
 void read_temperature_humidity_sensor(){
     struct dht11_reading temp_sensor_read;
-    int temperature, humidity;
+    float temperature, humidity;
 
     DHT11_init(32);
 
@@ -60,11 +61,16 @@ void read_temperature_humidity_sensor(){
         humidity = temp_sensor_read.humidity;
         send_dht_telemetry(&temperature, &humidity);
         vTaskDelay(1000 / portTICK_PERIOD_MS);
+
+        if((temperature < 20 || temperature > 24) || humidity > 60){
+          change_buzzer_state(1);
+        }
     }
 }
 
 void app_main(void)
 {
+    configure_buzzer();
     // Inicializa o NVS
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
