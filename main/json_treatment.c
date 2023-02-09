@@ -18,7 +18,7 @@ void send_dht_telemetry(void *temperature, void *humidity)
 
     float tmp = *(float *)temperature;
     float hmd = *(float *)humidity;
-
+    
     cJSON_AddItemToObject(root, "temperatura", cJSON_CreateNumber(tmp));
     cJSON_AddItemToObject(root, "umidade", cJSON_CreateNumber(hmd));
     mqtt_envia_mensagem("v1/devices/me/telemetry", cJSON_Print(root));

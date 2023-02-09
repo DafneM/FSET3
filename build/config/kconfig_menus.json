@@ -4040,6 +4040,44 @@
     {
         "children": [
             {
+                "children": [
+                    {
+                        "children": [],
+                        "depends_on": "<choice ESP_MODE>",
+                        "help": null,
+                        "id": "ENERGY",
+                        "name": "ENERGY",
+                        "range": null,
+                        "title": "Modo de Energia",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "<choice ESP_MODE>",
+                        "help": null,
+                        "id": "BATTERY",
+                        "name": "BATTERY",
+                        "range": null,
+                        "title": "Modo de Bateria",
+                        "type": "bool"
+                    }
+                ],
+                "depends_on": null,
+                "help": null,
+                "id": "modo-de-funcionamento-configure-o-modo-de-opera\u00e7\u00e3o-da-esp",
+                "name": "ESP_MODE",
+                "title": "Configure o modo de opera\u00e7\u00e3o da ESP",
+                "type": "choice"
+            }
+        ],
+        "depends_on": null,
+        "id": "modo-de-funcionamento",
+        "title": "Modo de Funcionamento",
+        "type": "menu"
+    },
+    {
+        "children": [
+            {
                 "children": [],
                 "depends_on": null,
                 "help": "Senha do WiFi (WPA or WPA2).",

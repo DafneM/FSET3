@@ -19,6 +19,20 @@ menu "Configuração do Wifi"
             Configure o valor máximo de tentativas de conexão.
 endmenu
 
+menu "Modo de Funcionamento"
+
+    choice ESP_MODE
+        prompt "Configure o modo de operação da ESP"
+        default ENERGY
+
+        config ENERGY
+            bool "Modo de Energia"
+        config BATTERY
+            bool "Modo de Bateria"
+    endchoice
+
+endmenu
+
 menu "Outros"
     config ESP_WIFI_PASSWORD
         string "Senha do Wifi"

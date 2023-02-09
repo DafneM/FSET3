@@ -13,6 +13,8 @@
 #include "json_treatment.h"
 #include "gpio.h"
 
+#define TEMP_GPIO 19
+
 SemaphoreHandle_t connectionWifiSemaphore;
 SemaphoreHandle_t connectionMQTTSemaphore;
 
@@ -53,7 +55,7 @@ void read_temperature_humidity_sensor(){
     struct dht11_reading temp_sensor_read;
     float temperature, humidity;
 
-    DHT11_init(32);
+    DHT11_init(TEMP_GPIO);
 
     while(1){
         temp_sensor_read = DHT11_read();

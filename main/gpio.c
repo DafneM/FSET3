@@ -1,6 +1,6 @@
 #include "driver/gpio.h"
 
-#define BUZZER_GPIO 25
+#define BUZZER_GPIO 2
 
 void configure_buzzer(void)
 {
