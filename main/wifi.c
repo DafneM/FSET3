@@ -102,4 +102,6 @@ void wifi_start(){
     vEventGroupDelete(s_wifi_event_group);
 }
 
-void wifi_stop();
+void wifi_stop(){
+    esp_wifi_stop();
+}

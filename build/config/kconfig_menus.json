@@ -4045,20 +4045,20 @@
                         "children": [],
                         "depends_on": "<choice ESP_MODE>",
                         "help": null,
-                        "id": "ENERGY",
-                        "name": "ENERGY",
+                        "id": "BATTERY",
+                        "name": "BATTERY",
                         "range": null,
-                        "title": "Modo de Energia",
+                        "title": "Modo de Bateria",
                         "type": "bool"
                     },
                     {
                         "children": [],
                         "depends_on": "<choice ESP_MODE>",
                         "help": null,
-                        "id": "BATTERY",
-                        "name": "BATTERY",
+                        "id": "ENERGY",
+                        "name": "ENERGY",
                         "range": null,
-                        "title": "Modo de Bateria",
+                        "title": "Modo de Energia",
                         "type": "bool"
                     }
                 ],
@@ -4068,6 +4068,16 @@
                 "name": "ESP_MODE",
                 "title": "Configure o modo de opera\u00e7\u00e3o da ESP",
                 "type": "choice"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": null,
+                "id": "ESP_MODE",
+                "name": "ESP_MODE",
+                "range": null,
+                "title": null,
+                "type": "int"
             }
         ],
         "depends_on": null,

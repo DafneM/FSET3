@@ -316,8 +316,9 @@ CONFIG_ESP_MAXIMUM_RETRY=5
 #
 # Modo de Funcionamento
 #
-CONFIG_ENERGY=y
 # CONFIG_BATTERY is not set
+CONFIG_ENERGY=y
+CONFIG_ESP_MODE=1
 # end of Modo de Funcionamento
 
 #

@@ -12,11 +12,18 @@
 #include "dht11.h"
 #include "json_treatment.h"
 #include "gpio.h"
+#include "battery_mode.h"
+#include "gpio_wakeup.h"
 
 #define TEMP_GPIO 19
 
+#define ESP_MODE CONFIG_ESP_MODE
+#define BATTERY_MODE 0
+#define ENERGY_MODE 1
+
 SemaphoreHandle_t connectionWifiSemaphore;
 SemaphoreHandle_t connectionMQTTSemaphore;
+SemaphoreHandle_t reconnectionWifiSemaphore;
 
 void wifi_connected(void * params)
 {
@@ -65,7 +72,7 @@ void read_temperature_humidity_sensor(){
         vTaskDelay(1000 / portTICK_PERIOD_MS);
 
         if((temperature < 20 || temperature > 24) || humidity > 60){
-          change_buzzer_state(1);
+          // change_buzzer_state(1);
         }
     }
 }
@@ -83,11 +90,22 @@ void app_main(void)
     
     connectionWifiSemaphore = xSemaphoreCreateBinary();
     connectionMQTTSemaphore = xSemaphoreCreateBinary();
+    reconnectionWifiSemaphore = xSemaphoreCreateBinary();
     wifi_start();
+    printf("ESP MODE %d\n", ESP_MODE);
 
     xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
-    // xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
+    xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
     xTaskCreate(&read_temperature_humidity_sensor, "Comunicação com Broker", 4096, NULL, 1, NULL);
 
+    if(ESP_MODE == BATTERY_MODE) {
+      ESP_LOGI("modo da esp", "Selecionou modo de bateria");
+      example_register_gpio_wakeup();
+      xTaskCreate(light_sleep_task, "light_sleep_task", 4096, NULL, 6, NULL);
+    }
+    else if(ESP_MODE == ENERGY_MODE) {
+      ESP_LOGI("modo da esp", "Selecionou modo de energia");
+      // loop no modo energia
+    }
 }
 

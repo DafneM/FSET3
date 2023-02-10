@@ -102,3 +102,7 @@ void mqtt_envia_mensagem(char * topico, char * mensagem)
     int message_id = esp_mqtt_client_publish(client, topico, mensagem, 0, 1, 0);
     ESP_LOGI(TAG, "Mensagem enviada, ID: %d %s", message_id, topico);
 }
+
+void mqtt_stop(){
+    esp_mqtt_client_stop(client);
+}

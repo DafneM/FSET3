@@ -25,11 +25,16 @@ menu "Modo de Funcionamento"
         prompt "Configure o modo de operação da ESP"
         default ENERGY
 
-        config ENERGY
-            bool "Modo de Energia"
         config BATTERY
             bool "Modo de Bateria"
+        config ENERGY
+            bool "Modo de Energia"
     endchoice
+    
+    config ESP_MODE
+        int
+        default 0 if BATTERY
+        default 1 if ENERGY
 
 endmenu
 
