@@ -14,6 +14,9 @@
 #include "gpio.h"
 #include "battery_mode.h"
 #include "gpio_wakeup.h"
+#include "photo_module.h"
+#include "heartbeat_module.h"
+#include "analog_sensors.h"
 
 #define TEMP_GPIO 19
 
@@ -80,6 +83,7 @@ void read_temperature_humidity_sensor(){
 void app_main(void)
 {
     configure_buzzer();
+    setup_analog_sensors();
     // Inicializa o NVS
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -97,6 +101,8 @@ void app_main(void)
     xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
     xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
     xTaskCreate(&read_temperature_humidity_sensor, "Comunicação com Broker", 4096, NULL, 1, NULL);
+    xTaskCreate(&check_luminosity, "Leitura de Luminosidade", 4096, NULL, 1, NULL);
+    xTaskCreate(&check_heartbeat, "Batimentos", 2048, NULL, 1, NULL);
 
     if(ESP_MODE == BATTERY_MODE) {
       ESP_LOGI("modo da esp", "Selecionou modo de bateria");
