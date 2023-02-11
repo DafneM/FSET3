@@ -3,6 +3,7 @@
 #include "freertos/task.h"
 #include "esp_adc/adc_oneshot.h"
 #include "esp_log.h"
+#include "json_treatment.h"
 
 #include "gpio_setup.h"
 #include "adc_module.h"
@@ -16,6 +17,7 @@ void check_heartbeat()
   {
     int heartbeat = analogRead(HEARTBEAT_SENSOR);
     ESP_LOGI(TAG, "Pulso: %.3d ", heartbeat);
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    send_heartbeat_telemetry(&heartbeat);
+    vTaskDelay(100 / portTICK_PERIOD_MS);
   }
 }

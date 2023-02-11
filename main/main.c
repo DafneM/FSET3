@@ -102,7 +102,7 @@ void app_main(void)
     xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
     xTaskCreate(&read_temperature_humidity_sensor, "Comunicação com Broker", 4096, NULL, 1, NULL);
     xTaskCreate(&check_luminosity, "Leitura de Luminosidade", 4096, NULL, 1, NULL);
-    xTaskCreate(&check_heartbeat, "Batimentos", 2048, NULL, 1, NULL);
+    xTaskCreate(&check_heartbeat, "Leitura de Batimentos", 4096, NULL, 1, NULL);
 
     if(ESP_MODE == BATTERY_MODE) {
       ESP_LOGI("modo da esp", "Selecionou modo de bateria");
