@@ -38,6 +38,27 @@ menu "Modo de Funcionamento"
 
 endmenu
 
+menu "Seleção de Configuração de Placa"
+
+  choice ESP_CONFIG_NUMBER
+      prompt "Selecione a configuração da ESP"
+      default ESP0
+
+      config ESP0
+          bool "Buzzer + DHT"
+      config ESP1
+          bool "Sensor de batimentos + Fotoresistor"
+      config ESP2
+          bool "Sensor de fogo + LED"
+  endchoice
+
+  config ESP_CONFIG_NUMBER
+    int
+    default 0 if ESP0
+    default 1 if ESP1
+    default 2 if ESP2
+endmenu
+
 menu "Outros"
     config ESP_WIFI_PASSWORD
         string "Senha do Wifi"

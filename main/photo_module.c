@@ -18,7 +18,7 @@ void check_luminosity()
   {
     int luminosity = analogRead(PHOTO_RESISTOR);
     int light = 0;
-    if(luminosity >= 2048){
+    if(luminosity >= 200){
       light = 1;
     }
     ESP_LOGI(TAG, "Luminosidade: %.3d Estado da luz: %d", luminosity, light);

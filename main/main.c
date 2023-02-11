@@ -17,6 +17,7 @@
 #include "photo_module.h"
 #include "heartbeat_module.h"
 #include "analog_sensors.h"
+#define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
 
 #define TEMP_GPIO 19
 
@@ -82,8 +83,8 @@ void read_temperature_humidity_sensor(){
 
 void app_main(void)
 {
-    configure_buzzer();
-    setup_analog_sensors();
+    printf("ESP NUMBER %d\n", ESP_CONFIG_NUMBER);
+    // configure_buzzer();
     // Inicializa o NVS
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -100,9 +101,16 @@ void app_main(void)
 
     xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
     xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
-    xTaskCreate(&read_temperature_humidity_sensor, "Comunicação com Broker", 4096, NULL, 1, NULL);
-    xTaskCreate(&check_luminosity, "Leitura de Luminosidade", 4096, NULL, 1, NULL);
-    xTaskCreate(&check_heartbeat, "Leitura de Batimentos", 4096, NULL, 1, NULL);
+    if(ESP_CONFIG_NUMBER == 0){
+      configure_buzzer();
+      xTaskCreate(&read_temperature_humidity_sensor, "Comunicação com Broker", 4096, NULL, 1, NULL);
+    } else if(ESP_CONFIG_NUMBER == 1){
+      setup_analog_sensors();
+      xTaskCreate(&check_luminosity, "Leitura de Luminosidade", 4096, NULL, 1, NULL);
+      xTaskCreate(&check_heartbeat, "Leitura de Batimentos", 4096, NULL, 1, NULL);
+    } else {
+      // Opção com LED e sensor de incêndio
+    }
 
     if(ESP_MODE == BATTERY_MODE) {
       ESP_LOGI("modo da esp", "Selecionou modo de bateria");
