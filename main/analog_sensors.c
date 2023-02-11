@@ -9,10 +9,12 @@
 
 #define PHOTO_RESISTOR ADC_CHANNEL_3
 #define HEARTBEAT_SENSOR ADC_CHANNEL_0
+#define BOARD_LED 2
 
 void setup_analog_sensors()
 {
   adc_init(ADC_UNIT_1);
   pinMode(PHOTO_RESISTOR, GPIO_ANALOG);
   pinMode(HEARTBEAT_SENSOR, GPIO_ANALOG);
+  pinMode(BOARD_LED, GPIO_OUTPUT);
 }

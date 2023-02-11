@@ -17,9 +17,12 @@ void check_luminosity()
    while (true)
   {
     int luminosity = analogRead(PHOTO_RESISTOR);
-    luminosity = luminosity;
-    ESP_LOGI(TAG, "Luminosidade: %.3d ", luminosity);
-    send_photo_telemetry(&luminosity);
+    int light = 0;
+    if(luminosity >= 2048){
+      light = 1;
+    }
+    ESP_LOGI(TAG, "Luminosidade: %.3d Estado da luz: %d", luminosity, light);
+    send_photo_telemetry(&luminosity, &light);
     vTaskDelay(1000 / portTICK_PERIOD_MS);
   }
 }
