@@ -105,7 +105,7 @@ void app_main(void)
     xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
     if(ESP_CONFIG_NUMBER == 0){
       configure_buzzer();
-      xTaskCreate(&read_temperature_humidity_sensor, "Comunicação com Broker", 4096, NULL, 1, NULL);
+      xTaskCreate(&read_temperature_humidity_sensor, "Leitura de Temperatura e Umidade", 4096, NULL, 1, NULL);
     } else if(ESP_CONFIG_NUMBER == 1){
       setup_analog_sensors();
       xTaskCreate(&check_luminosity, "Leitura de Luminosidade", 4096, NULL, 1, NULL);

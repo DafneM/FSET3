@@ -14,7 +14,8 @@
 
 void check_luminosity()
 {
-   while (true)
+  vTaskDelay(2000 / portTICK_PERIOD_MS);
+  while (true)
   {
     int luminosity = analogRead(PHOTO_RESISTOR);
     int light = 0;

@@ -14,11 +14,12 @@
 
 void check_heartbeat()
 {
+  vTaskDelay(2000 / portTICK_PERIOD_MS);
    while (true)
   {
     int heartbeat = analogRead(HEARTBEAT_SENSOR);
     int board_led_status = 0;
-    if(heartbeat > 1000){
+    if(heartbeat > 600){
       digitalWrite(BOARD_LED, 0);
       board_led_status = 0;
     }

@@ -22,6 +22,7 @@
 #include "mqtt.h"
 
 #define TAG "MQTT"
+#define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
 
 extern SemaphoreHandle_t connectionMQTTSemaphore;
 esp_mqtt_client_handle_t client;
@@ -87,11 +88,22 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
 }
 
 void mqtt_start()
-{
-    esp_mqtt_client_config_t mqtt_config = {
-        .broker.address.uri = "mqtt://164.41.98.25",
-        .credentials.username = "54OJkccFuaym1xQOLskK"
+{   
+    char *teste_token;
+    if (ESP_CONFIG_NUMBER == 0){
+      char esp0_token[20] = "54OJkccFuaym1xQOLskK";
+      teste_token = esp0_token;
+    } else if (ESP_CONFIG_NUMBER == 1) {
+      char esp1_token[20] = "FnQVRdGMtEdKWnHTAR3Y";
+      teste_token = esp1_token;
+    } else if (ESP_CONFIG_NUMBER == 2) {
+      char esp2_token[20] = "54OJkccFuaym1xQOLskK";
+      teste_token = esp2_token;
     };
+    esp_mqtt_client_config_t mqtt_config = {
+          .broker.address.uri = "mqtt://164.41.98.25",
+          .credentials.username = teste_token
+      };
     client = esp_mqtt_client_init(&mqtt_config);
     esp_mqtt_client_register_event(client, ESP_EVENT_ANY_ID, mqtt_event_handler, NULL);
     esp_mqtt_client_start(client);
