@@ -18,14 +18,10 @@
 #include "nvs_flash.h"
 #include "nvs.h"
 
-
 #define STORAGE_NAMESPACE "storage"
 
-static QueueHandle_t gpio_evt_queue = NULL;
 
-
-esp_err_t save_value(int32_t restart_counter)
-{
+esp_err_t save_int(int32_t restart_counter) {
     nvs_handle_t my_handle;
     esp_err_t err;
 
@@ -49,8 +45,7 @@ esp_err_t save_value(int32_t restart_counter)
     return ESP_OK;
 }
 
-int32_t read_value(void)
-{
+int32_t read_int(void) {
     nvs_handle_t my_handle;
     esp_err_t err;
 
@@ -67,3 +62,40 @@ int32_t read_value(void)
     return restart_counter;
 }
 
+esp_err_t write_str(char* key, char* stringVal) {
+    nvs_handle_t nvsHandle;
+    esp_err_t retVal;
+    
+    retVal = nvs_open(STORAGE_NAMESPACE, NVS_READWRITE, &nvsHandle);
+    if (retVal != ESP_OK) return retVal;
+    
+    retVal = nvs_set_str(nvsHandle, key, stringVal);
+    if (retVal != ESP_OK) return retVal;
+
+    retVal = nvs_commit(nvsHandle);
+    if (retVal != ESP_OK) return retVal;
+    
+    nvs_close(nvsHandle);
+
+    return ESP_OK;
+}
+
+char* read_str(char* key) {
+    nvs_handle_t nvsHandle;
+    esp_err_t retVal;
+    
+    retVal = nvs_open(STORAGE_NAMESPACE, NVS_READWRITE, &nvsHandle);
+    if (retVal != ESP_OK) return "";
+
+    size_t required_size;
+    retVal = nvs_get_str(nvsHandle, key, NULL, &required_size);
+    if (retVal != ESP_OK) return "";
+    
+    char* savedData = malloc(required_size);
+    retVal = nvs_get_str(nvsHandle, key, savedData, &required_size);
+    if (retVal != ESP_OK) return "";
+    
+    nvs_close(nvsHandle);
+    
+    return savedData;
+}
