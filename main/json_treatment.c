@@ -84,3 +84,19 @@ void send_board_led_attribute(int *led_status)
     cJSON_AddItemToObject(root, "led da placa", cJSON_CreateNumber(ls));
     mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
 }
+
+void send_shock_attribute(int *shocksensor)
+{
+
+    cJSON *root = cJSON_CreateObject();
+    if (root == NULL)
+    {
+        ESP_LOGE(TAG, "Não foi possível criar o JSON");
+        return;
+    }
+
+    double shocksensor_toDouble = *(int *)shocksensor;
+    
+    cJSON_AddItemToObject(root, "sensorImpacto", cJSON_CreateNumber(shocksensor_toDouble));
+    mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
+}
