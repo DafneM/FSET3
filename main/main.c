@@ -16,6 +16,8 @@
 #include "gpio_wakeup.h"
 #include "photo_module.h"
 #include "heartbeat_module.h"
+#include "shock_module.h"
+#include "flame_module.h"
 #include "analog_sensors.h"
 #define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
 
@@ -108,8 +110,12 @@ void app_main(void)
       setup_analog_sensors();
       xTaskCreate(&check_luminosity, "Leitura de Luminosidade", 4096, NULL, 1, NULL);
       xTaskCreate(&check_heartbeat, "Leitura de Batimentos", 4096, NULL, 1, NULL);
+    } else if(ESP_CONFIG_NUMBER == 2){
+      setup_analog_sensors();
+      xTaskCreate(&readShockSensor, "Leitura Sensor de Choque", 4096, NULL, 1, NULL);
+      xTaskCreate(&check_flame, "Leitura Sensor de Chama", 4096, NULL, 1, NULL);
     } else {
-      // Opção com LED e sensor de incêndio
+      printf("ESP not identified");
     }
 
     if(ESP_MODE == BATTERY_MODE) {
