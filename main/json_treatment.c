@@ -120,6 +120,24 @@ void send_board_magnetic_attribute(int *magnetic_status)
     mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
 }
 
+
+void send_board_limit_temp_attribute(int *limit)
+{
+
+    cJSON *root = cJSON_CreateObject();
+    if (root == NULL)
+    {
+        ESP_LOGE(TAG, "Não foi possível criar o JSON");
+        return;
+    }
+
+    float lt = *(int *)limit;
+    
+    cJSON_AddItemToObject(root, "temperatura umidade limite", cJSON_CreateNumber(lt));
+    mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
+}
+
+
 void send_board_led_attribute(int *led_status)
 {
 

@@ -5,6 +5,7 @@
 #include "esp_log.h"
 #include "json_treatment.h"
 #include "mqtt.h"
+#include "gpio.h"
 
 #include "gpio_setup.h"
 #include "adc_module.h"
@@ -15,6 +16,7 @@
 
 void check_heartbeat()
 {
+  int buzzer_status = 0;
   vTaskDelay(2000 / portTICK_PERIOD_MS);
    while (true)
   {
@@ -23,10 +25,16 @@ void check_heartbeat()
     if(heartbeat > 800){
       digitalWrite(BOARD_LED, 0);
       board_led_status = 0;
+      change_buzzer_state(0);
+      buzzer_status = 0;
+      send_board_buzzer_attribute(&buzzer_status);
     }
     else {
       digitalWrite(BOARD_LED, 1);
       board_led_status = 1;
+      change_buzzer_state(1);
+      buzzer_status = 1;
+      send_board_buzzer_attribute(&buzzer_status);
     }
     ESP_LOGI(TAG, "Pulso: %.3d ", heartbeat);
     send_heartbeat_telemetry(&heartbeat);
