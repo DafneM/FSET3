@@ -13,6 +13,8 @@ void send_heartbeat_telemetry(int *heartbeat);
 
 void send_board_buzzer_attribute(int *buzzer_status);
 
+void send_board_magnetic_attribute(int *magnetic_status);
+
 void send_board_led_attribute(int *led_status);
 
 void send_shock_attribute(int *shocksensor);

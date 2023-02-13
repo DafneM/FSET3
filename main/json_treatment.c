@@ -87,6 +87,22 @@ void send_heartbeat_telemetry(int *heartbeat)
     mqtt_envia_mensagem("v1/devices/me/telemetry", cJSON_Print(root));
 }
 
+void send_board_magnetic_attribute(int *magnetic_status)
+{
+
+    cJSON *root = cJSON_CreateObject();
+    if (root == NULL)
+    {
+        ESP_LOGE(TAG, "Não foi possível criar o JSON");
+        return;
+    }
+
+    float mg = *(int *)magnetic_status;
+    
+    cJSON_AddItemToObject(root, "sensor magnetico", cJSON_CreateNumber(mg));
+    mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
+}
+
 void send_board_led_attribute(int *led_status)
 {
 

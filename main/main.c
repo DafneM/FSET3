@@ -16,6 +16,7 @@
 #include "gpio_wakeup.h"
 #include "photo_module.h"
 #include "heartbeat_module.h"
+#include "magnetic_module.h"
 #include "shock_module.h"
 #include "flame_module.h"
 #include "analog_sensors.h"
@@ -98,7 +99,6 @@ void read_temperature_humidity_sensor(){
           temp_media = temp_media/10;
           humidity_media = humidity_media/10;
           send_dht_media_telemetry(&temp_media, &humidity_media);
-  
 
           if((temp_media < 20 || temp_media > 32) || humidity_media > 60){
             change_buzzer_state(1);
@@ -141,6 +141,7 @@ void app_main(void)
     if(ESP_CONFIG_NUMBER == 0){
       configure_buzzer();
       xTaskCreate(&read_temperature_humidity_sensor, "Leitura de Temperatura e Umidade", 4096, NULL, 1, NULL);
+      xTaskCreate(&check_magnetic, "Leitura de Sensor Magnético", 4096, NULL, 1, NULL);
     } else if(ESP_CONFIG_NUMBER == 1){
       setup_analog_sensors();
       xTaskCreate(&check_luminosity, "Leitura de Luminosidade", 4096, NULL, 1, NULL);
