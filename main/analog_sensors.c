@@ -14,6 +14,7 @@
 #define HEARTBEAT_SENSOR ADC_CHANNEL_0
 #define BOARD_LED 2
 #define SHOCK_SENSOR 16
+#define LED_FLASH 18
 
 void setup_analog_sensors()
 {
@@ -28,5 +29,6 @@ void setup_analog_sensors()
   else if (ESP_CONFIG_NUMBER == 2) {
     pinMode(FLAME_SENSOR, GPIO_ANALOG);
     pinMode(SHOCK_SENSOR, GPIO_INPUT);
+    pinMode(LED_FLASH, GPIO_OUTPUT);
   }
 }

@@ -10,6 +10,7 @@
 
 #define TAG "FLAME"
 #define FLAME_MOD ADC_CHANNEL_0
+#define LED_FLASH 18
 
 
 void check_flame() {
@@ -20,7 +21,8 @@ void check_flame() {
     flame = analogRead(FLAME_MOD);
     ESP_LOGI(TAG, "Flame: %d", flame);
     
-    if (flame < 800) {
+    if (flame < 300) {
+      digitalWrite(LED_FLASH, 1);
       fireAlert = true;
       send_flame_alert(&fireAlert);
     }
@@ -32,5 +34,6 @@ void check_flame() {
     flame = flame/4;
     send_flame_telemetry(&flame);
     vTaskDelay(1000 / portTICK_PERIOD_MS);
+    digitalWrite(LED_FLASH, 0);
   }
 }
