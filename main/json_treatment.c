@@ -24,6 +24,24 @@ void send_dht_telemetry(void *temperature, void *humidity)
     mqtt_envia_mensagem("v1/devices/me/telemetry", cJSON_Print(root));
 }
 
+void send_dht_media_telemetry(void *temperature, void *humidity)
+{
+
+    cJSON *root = cJSON_CreateObject();
+    if (root == NULL)
+    {
+        ESP_LOGE(TAG, "Não foi possível criar o JSON");
+        return;
+    }
+
+    float tmp = *(float *)temperature;
+    float hmd = *(float *)humidity;
+    
+    cJSON_AddItemToObject(root, "temperatura media", cJSON_CreateNumber(tmp));
+    cJSON_AddItemToObject(root, "umidade media", cJSON_CreateNumber(hmd));
+    mqtt_envia_mensagem("v1/devices/me/telemetry", cJSON_Print(root));
+}
+
 void mqtt_event_data_parser(char *data)
 {
     cJSON *json = cJSON_Parse(data);
@@ -82,6 +100,22 @@ void send_board_led_attribute(int *led_status)
     float ls = *(int *)led_status;
     
     cJSON_AddItemToObject(root, "led da placa", cJSON_CreateNumber(ls));
+    mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
+}
+
+void send_board_buzzer_attribute(int *buzzer_status)
+{
+
+    cJSON *root = cJSON_CreateObject();
+    if (root == NULL)
+    {
+        ESP_LOGE(TAG, "Não foi possível criar o JSON");
+        return;
+    }
+
+    float ls = *(int *)buzzer_status;
+    
+    cJSON_AddItemToObject(root, "alarme", cJSON_CreateNumber(ls));
     mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
 }
 
