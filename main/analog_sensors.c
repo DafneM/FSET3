@@ -13,7 +13,7 @@
 #define PHOTO_RESISTOR ADC_CHANNEL_3
 #define HEARTBEAT_SENSOR ADC_CHANNEL_0
 #define BOARD_LED 2
-#define SHOCK_SENSOR 4
+#define SHOCK_SENSOR 16
 
 void setup_analog_sensors()
 {

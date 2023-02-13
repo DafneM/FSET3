@@ -89,20 +89,20 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
 
 void mqtt_start()
 {   
-    char *teste_token;
+    char *token_dash;
     if (ESP_CONFIG_NUMBER == 0){
       char esp0_token[20] = "54OJkccFuaym1xQOLskK";
-      teste_token = esp0_token;
+      token_dash = esp0_token;
     } else if (ESP_CONFIG_NUMBER == 1) {
       char esp1_token[20] = "FnQVRdGMtEdKWnHTAR3Y";
-      teste_token = esp1_token;
+      token_dash = esp1_token;
     } else if (ESP_CONFIG_NUMBER == 2) {
-      char esp2_token[20] = "54OJkccFuaym1xQOLskK";
-      teste_token = esp2_token;
+      char esp2_token[20] = "OP5Baw7lgTuJVzc4xHIC";
+      token_dash = esp2_token;
     };
     esp_mqtt_client_config_t mqtt_config = {
           .broker.address.uri = "mqtt://164.41.98.25",
-          .credentials.username = teste_token
+          .credentials.username = token_dash
       };
     client = esp_mqtt_client_init(&mqtt_config);
     esp_mqtt_client_register_event(client, ESP_EVENT_ANY_ID, mqtt_event_handler, NULL);

@@ -11,7 +11,7 @@
 #include "mqtt.h"
 #include "json_treatment.h"
 
-#define SHOCK_SENSOR 4
+#define SHOCK_SENSOR 16
 
 void readShockSensor(){
     int shockStatus;

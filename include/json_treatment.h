@@ -13,4 +13,8 @@ void send_board_led_attribute(int *led_status);
 
 void send_shock_attribute(int *shocksensor);
 
+void send_flame_telemetry(int *flame);
+
+void send_flame_alert(int *flame);
+
 #endif

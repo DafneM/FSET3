@@ -100,3 +100,35 @@ void send_shock_attribute(int *shocksensor)
     cJSON_AddItemToObject(root, "sensorImpacto", cJSON_CreateNumber(shocksensor_toDouble));
     mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
 }
+
+void send_flame_alert(int *flame)
+{
+
+    cJSON *root = cJSON_CreateObject();
+    if (root == NULL)
+    {
+        ESP_LOGE(TAG, "Não foi possível criar o JSON");
+        return;
+    }
+
+    double flame_toDouble = *(int *)flame;
+    
+    cJSON_AddItemToObject(root, "alertaFogo", cJSON_CreateNumber(flame_toDouble));
+    mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
+}
+
+void send_flame_telemetry(int *flame)
+{
+
+    cJSON *root = cJSON_CreateObject();
+    if (root == NULL)
+    {
+        ESP_LOGE(TAG, "Não foi possível criar o JSON");
+        return;
+    }
+
+    double flame_toDouble = *(int *)flame;
+    
+    cJSON_AddItemToObject(root, "sensorChama", cJSON_CreateNumber(flame_toDouble));
+    mqtt_envia_mensagem("v1/devices/me/telemetry", cJSON_Print(root));
+}
