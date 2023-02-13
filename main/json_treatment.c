@@ -3,6 +3,8 @@
 #include "mqtt.h"
 #include "esp_log.h"
 #include "esp_event.h"
+#include "mqtt_client.h"
+#include "heartbeat_module.h"
 
 #define TAG "MQTT"
 
@@ -42,14 +44,29 @@ void send_dht_media_telemetry(void *temperature, void *humidity)
     mqtt_envia_mensagem("v1/devices/me/telemetry", cJSON_Print(root));
 }
 
-void mqtt_event_data_parser(char *data)
+void set_attributes_states(char *key, int value, int topic_id)
+{
+    if (strcmp("setBoardLed", key) == 0)
+    {
+        set_board_led_state(value, topic_id);
+    }
+}
+
+void mqtt_event_data_parser(char *data, char *topic)
 {
     cJSON *json = cJSON_Parse(data);
     if (json == NULL)
         return;
+
+    int rst;
+    int topic_id;
+    rst = sscanf(topic, "v1/devices/me/rpc/request/%d",
+      &topic_id);
     char *key = cJSON_GetObjectItem(json, "method")->valuestring;
     int value = cJSON_GetObjectItem(json, "params")->valueint;
-    // TODO: tratar os valores do JSON 
+    if(strstr(key, "set") != NULL){
+        set_attributes_states(key, value, topic_id);
+    }
 }
 
 void send_photo_telemetry(int *luminosity, int *light)
