@@ -19,6 +19,7 @@
 #include "shock_module.h"
 #include "flame_module.h"
 #include "analog_sensors.h"
+#include <math.h>
 #define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
 
 #define TEMP_GPIO 19
@@ -30,6 +31,10 @@
 SemaphoreHandle_t connectionWifiSemaphore;
 SemaphoreHandle_t connectionMQTTSemaphore;
 SemaphoreHandle_t reconnectionWifiSemaphore;
+
+float temp_media = 0;
+float humidity_media = 0;
+int cont_temp = 0;
 
 void wifi_connected(void * params)
 {
@@ -64,9 +69,17 @@ void handle_server_communication(void * params)
   }
 }
 
+float limit_decimal(float x, int decimal_places){
+  float power = pow(10, decimal_places);
+  return roundf(x*power)/power;
+}
+
 void read_temperature_humidity_sensor(){
     struct dht11_reading temp_sensor_read;
     float temperature, humidity;
+    temp_media = 0;
+    humidity_media = 0;
+    int buzzer_status = 0;
 
     DHT11_init(TEMP_GPIO);
 
@@ -74,12 +87,34 @@ void read_temperature_humidity_sensor(){
         temp_sensor_read = DHT11_read();
         temperature = temp_sensor_read.temperature;
         humidity = temp_sensor_read.humidity;
-        send_dht_telemetry(&temperature, &humidity);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
 
-        if((temperature < 20 || temperature > 24) || humidity > 60){
-          // change_buzzer_state(1);
+        temp_media = temp_media + temperature;
+        humidity_media = humidity_media + humidity;
+        cont_temp++;
+
+        send_dht_telemetry(&temperature, &humidity);
+
+        if (cont_temp == 10){
+          temp_media = temp_media/10;
+          humidity_media = humidity_media/10;
+          send_dht_media_telemetry(&temp_media, &humidity_media);
+  
+
+          if((temp_media < 20 || temp_media > 32) || humidity_media > 60){
+            change_buzzer_state(1);
+            buzzer_status = 1;
+            send_board_buzzer_attribute(&buzzer_status);
+          }
+          else{
+            change_buzzer_state(0);
+            buzzer_status = 0;
+            send_board_buzzer_attribute(&buzzer_status);
+          }
+
+          cont_temp = 0;
         }
+
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
 
