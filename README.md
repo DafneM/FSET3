@@ -8,6 +8,8 @@
 
 Neste repositório consta o código do [trabalho final](https://gitlab.com/fse_fga/trabalhos-2022_2/trabalho-final-2022-2) que consiste em um sistema para de controle de ambiente e batimentos em hospital utilizando 3 ESP32, WIFI e protocolo MQTT.
 
+Foi utilizado também o NVS Flash e o modo Low Power com light sleep para garantir melhor funcionamento do trabalho.
+
 # Hardware
 
 O hardware para esse repositório possui 3 ESPS32, com diferentes entradas e saídas expostas abaixo:
@@ -31,6 +33,7 @@ O hardware para esse repositório possui 3 ESPS32, com diferentes entradas e sa�
 # Dependências
 
 [Visual Studio Code](https://code.visualstudio.com/)
+
 [Espressif](https://www.espressif.com/)
 
 # Como rodar
