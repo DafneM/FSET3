@@ -22,8 +22,8 @@ O hardware para esse reposit√≥rio possui 3 ESPS32, com diferentes entradas e sa√
 
 ### ESP 2
 
-- Sensor de batimentos
-- Sensor de luminosidade
+- Sensor de batimentos (ADC1 CHANNEL 0)
+- Sensor de luminosidade (ADC1 CHANNEL 3)
 
 ### ESP 3
 
