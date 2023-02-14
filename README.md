@@ -4,6 +4,7 @@
 | ------------- | ------------- |
 | Dafne Moretti Moreira  | 190026243  |
 | João Pedro Alves da Silva Chaves  | 180123203 |
+| Renan Welz Schadt  |  160143403 |
 
 Neste repositório consta o código do [trabalho final](https://gitlab.com/fse_fga/trabalhos-2022_2/trabalho-final-2022-2) que consiste em um sistema para de controle de ambiente e batimentos em hospital utilizando 3 ESP32, WIFI e protocolo MQTT.
 
