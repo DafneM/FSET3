@@ -116,5 +116,6 @@ void mqtt_envia_mensagem(char * topico, char * mensagem)
 }
 
 void mqtt_stop(){
-    esp_mqtt_client_stop(client);
+    esp_err_t err = esp_mqtt_client_stop(client);
+    ESP_ERROR_CHECK(err);
 }

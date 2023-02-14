@@ -147,7 +147,7 @@ void send_shock_attribute(int *shocksensor)
 
     double shocksensor_toDouble = *(int *)shocksensor;
     
-    cJSON_AddItemToObject(root, "sensorImpacto", cJSON_CreateNumber(shocksensor_toDouble));
+    cJSON_AddItemToObject(root, "calor", cJSON_CreateNumber(shocksensor_toDouble));
     mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
 }
 

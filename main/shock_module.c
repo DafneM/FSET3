@@ -39,3 +39,21 @@ void readShockSensor(){
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
+
+void readShockSensorBatery(){
+    int shockStatus;
+    int count = 0;
+    while (true) {
+        shockStatus = gpio_get_level(SHOCK_SENSOR);
+        printf("Status Sensor Impacto: %d", shockStatus);
+        send_shock_attribute(&shockStatus);
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        if (shockStatus == 0) {
+            count++;
+        }
+        
+        if (count > 5) {
+            break;
+        }
+    }
+}

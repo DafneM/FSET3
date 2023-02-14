@@ -138,30 +138,42 @@ void app_main(void)
 
     xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
     xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
-    if(ESP_CONFIG_NUMBER == 0){
-      configure_buzzer();
-      xTaskCreate(&read_temperature_humidity_sensor, "Leitura de Temperatura e Umidade", 4096, NULL, 1, NULL);
-      xTaskCreate(&check_magnetic, "Leitura de Sensor Magnético", 4096, NULL, 1, NULL);
-    } else if(ESP_CONFIG_NUMBER == 1){
-      setup_analog_sensors();
-      xTaskCreate(&check_luminosity, "Leitura de Luminosidade", 4096, NULL, 1, NULL);
-      xTaskCreate(&check_heartbeat, "Leitura de Batimentos", 4096, NULL, 1, NULL);
-    } else if(ESP_CONFIG_NUMBER == 2){
-      setup_analog_sensors();
-      xTaskCreate(&readShockSensor, "Leitura Sensor de Choque", 4096, NULL, 1, NULL);
-      xTaskCreate(&check_flame, "Leitura Sensor de Chama", 4096, NULL, 1, NULL);
-    } else {
-      printf("ESP not identified");
-    }
 
     if(ESP_MODE == BATTERY_MODE) {
-      ESP_LOGI("modo da esp", "Selecionou modo de bateria");
-      example_register_gpio_wakeup();
-      xTaskCreate(light_sleep_task, "light_sleep_task", 4096, NULL, 6, NULL);
+      
+      if(ESP_CONFIG_NUMBER == 2) {
+        //wake_up_with_gpio(16);
+        while(1) {
+          vTaskDelay(1000 / portTICK_PERIOD_MS);
+          ESP_LOGI("Modo Funcionamento", "Bateria");
+          readShockSensorBatery();
+          light_sleep_task();
+          xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
+          xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
+        }
+      } else {
+        printf("ESP not identified");
+      }
+
     }
     else if(ESP_MODE == ENERGY_MODE) {
-      ESP_LOGI("modo da esp", "Selecionou modo de energia");
-      // loop no modo energia
+      ESP_LOGI("Modo Funcionamento", "ENERGIA");
+      
+      if(ESP_CONFIG_NUMBER == 0) {
+        configure_buzzer();
+        xTaskCreate(&read_temperature_humidity_sensor, "Leitura de Temperatura e Umidade", 4096, NULL, 1, NULL);
+        xTaskCreate(&check_magnetic, "Leitura de Sensor Magnético", 4096, NULL, 1, NULL);
+      } else if(ESP_CONFIG_NUMBER == 1) {
+        setup_analog_sensors();
+        xTaskCreate(&check_luminosity, "Leitura de Luminosidade", 4096, NULL, 1, NULL);
+        xTaskCreate(&check_heartbeat, "Leitura de Batimentos", 4096, NULL, 1, NULL);
+      } else if(ESP_CONFIG_NUMBER == 2) {
+        setup_analog_sensors();
+        xTaskCreate(&readShockSensor, "Leitura Sensor de Choque", 4096, NULL, 1, NULL);
+        xTaskCreate(&check_flame, "Leitura Sensor de Chama", 4096, NULL, 1, NULL);
+      } else {
+        printf("ESP not identified");
+      }
     }
 }
 
