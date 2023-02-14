@@ -27,8 +27,9 @@ O hardware para esse repositório possui 3 ESPS32, com diferentes entradas e sa�
 
 ### ESP 3
 
-- Sensor de chama
-- Led
+- Sensor de Chama Analógico (ADC 0)
+- Sensor de Chama Digital (GPIO 16)
+- LED Flash (GPIO 18)
 
 # Dependências
 
