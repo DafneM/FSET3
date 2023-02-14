@@ -51,3 +51,6 @@ E compilar o código clicando em
 # Dashboard
 
 A dashboard foi criada com [ThingsBoard](https://thingsboard.io/) e pode ser acessada em Dashboards com nome DafneJoaoRenan
+
+![dash](https://user-images.githubusercontent.com/54643335/218875435-da28c2f8-679f-4c36-8a29-aabe0746dc05.jpeg)
+
