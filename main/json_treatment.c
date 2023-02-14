@@ -217,3 +217,17 @@ void send_flame_telemetry(int *flame)
     cJSON_AddItemToObject(root, "sensorChama", cJSON_CreateNumber(flame_toDouble));
     mqtt_envia_mensagem("v1/devices/me/telemetry", cJSON_Print(root));
 }
+
+void send_accumulated_heat_attribute(int32_t *acc_heat){
+    cJSON *root = cJSON_CreateObject();
+    if (root == NULL)
+    {
+        ESP_LOGE(TAG, "Não foi possível criar o JSON");
+        return;
+    }
+
+    double accHeat_toDouble = *(int32_t *)acc_heat;
+    
+    cJSON_AddItemToObject(root, "calorAcumulado", cJSON_CreateNumber(accHeat_toDouble));
+    mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
+}

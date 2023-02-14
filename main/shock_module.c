@@ -11,6 +11,7 @@
 #include "mqtt.h"
 #include "json_treatment.h"
 #include "led_pwm.h"
+#include "nvs.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -22,20 +23,38 @@ void readShockSensor(){
     gpio_num_t led = 2;
     configure_led_pwm(led);
 
-    uint32_t count = 1;
+    char* var_name = "intensity";
     int shockStatus;
+    esp_err_t err;
+
+    int32_t intensity = read_int(var_name);
     while (true) {
         shockStatus = gpio_get_level(SHOCK_SENSOR);
         printf("Status Sensor Impacto: %d", shockStatus);
-        printf("Count: %ld", count);
-        count = count + 50;
-        if (count < 1020) {
-            led_control(count);
+        printf("Intensidade: %ld", intensity);
+        if (shockStatus == 1) {
+            intensity = intensity + 20;
         }
         else {
-            count = 0;
-            led_control(count);
+            intensity = intensity - 20;
         }
+
+        if (intensity > 1020) {
+            intensity = 1020;
+            led_control(intensity);
+        } 
+        else if (intensity > 0) {
+            led_control(intensity);
+        }
+        else {
+            intensity = 0;
+            led_control(intensity);
+        }
+        
+        err = save_int(intensity,var_name);
+        send_shock_attribute(&shockStatus);
+        send_accumulated_heat_attribute(&intensity);
+        
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }

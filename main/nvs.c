@@ -21,7 +21,7 @@
 #define STORAGE_NAMESPACE "storage"
 
 
-esp_err_t save_int(int32_t restart_counter) {
+esp_err_t save_int(int32_t data, char* variable_name) {
     nvs_handle_t my_handle;
     esp_err_t err;
 
@@ -30,7 +30,7 @@ esp_err_t save_int(int32_t restart_counter) {
     if (err != ESP_OK) return err;
 
     // Write
-    err = nvs_set_i32(my_handle, "restart_conter", restart_counter);
+    err = nvs_set_i32(my_handle, variable_name, data);
     if (err != ESP_OK) return err;
 
     // Commit written value.
@@ -45,7 +45,7 @@ esp_err_t save_int(int32_t restart_counter) {
     return ESP_OK;
 }
 
-int32_t read_int(void) {
+int32_t read_int(char* variable_name) {
     nvs_handle_t my_handle;
     esp_err_t err;
 
@@ -54,12 +54,12 @@ int32_t read_int(void) {
     if (err != ESP_OK) return err;
 
     // Read
-    int32_t restart_counter = 0; // value will default to 0, if not set yet in NVS
-    err = nvs_get_i32(my_handle, "restart_conter", &restart_counter);
+    int32_t data = 0; // value will default to 0, if not set yet in NVS
+    err = nvs_get_i32(my_handle, variable_name, &data);
     if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) return 0;
 
     nvs_close(my_handle);
-    return restart_counter;
+    return data;
 }
 
 esp_err_t write_str(char* key, char* stringVal) {

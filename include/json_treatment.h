@@ -25,4 +25,6 @@ void send_flame_telemetry(int *flame);
 
 void send_flame_alert(int *flame);
 
+void send_accumulated_heat_attribute(int32_t *flame);
+
 #endif
