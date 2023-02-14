@@ -80,7 +80,7 @@ void read_temperature_humidity_sensor(){
     float temperature, humidity;
     temp_media = 0;
     humidity_media = 0;
-    int buzzer_status = 0;
+    int limit_temp = 0;
 
     DHT11_init(TEMP_GPIO);
 
@@ -100,15 +100,13 @@ void read_temperature_humidity_sensor(){
           humidity_media = humidity_media/10;
           send_dht_media_telemetry(&temp_media, &humidity_media);
 
-          if((temp_media < 20 || temp_media > 32) || humidity_media > 60){
-            change_buzzer_state(1);
-            buzzer_status = 1;
-            send_board_buzzer_attribute(&buzzer_status);
+          if((temp_media < 17 || temp_media > 32) || humidity_media > 60){
+            limit_temp = 1;
+            send_board_limit_temp_attribute(&limit_temp);
           }
           else{
-            change_buzzer_state(0);
-            buzzer_status = 0;
-            send_board_buzzer_attribute(&buzzer_status);
+            limit_temp = 0;
+            send_board_limit_temp_attribute(&limit_temp);
           }
 
           cont_temp = 0;
